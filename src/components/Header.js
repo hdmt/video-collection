@@ -1,9 +1,11 @@
-import React , { Component } from 'react';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import firebase from 'firebase/app';
@@ -17,9 +19,11 @@ const styles = theme => ({
     flexGrow: 1,
   },
   button: {
+    // margin: theme.spacing.unit,
     margin: theme.spacing(1),
   },
   rightIcon: {
+    // marginLeft: theme.spacing.unit,
     marginLeft: theme.spacing(1),
   },
   avatar: {
@@ -32,31 +36,15 @@ const styles = theme => ({
   },
 });
 
-
 class Header extends Component {
   constructor() {
     super();
-    this.state = {
-      isLogin: false,
-      username: '',
-      profilePicUrl: ''
-    }
-  }
-
-  componentDidMount(){
+    this.state = { isLogin: false, username: '', profilePicUrl: '' }
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({
-          isLogin: true,
-          username: user.displayName,
-          profilePicUrl: user.photoURL
-        });
+        this.setState({ isLogin: true, username: user.displayName, profilePicUrl: user.photoURL });
       } else {
-        this.setState({
-          isLogin: false,
-          username: '',
-          profilePicUrl: ''
-        });
+        this.setState({ isLogin: false, username: '', profilePicUrl: '' });
       }
     });
   }
@@ -86,8 +74,12 @@ class Header extends Component {
           <Avatar alt="profile image" src={`${this.state.profilePicUrl}`} className={classes.avatar} />
           {this.state.username}
         </Button>
-        <Button color="inherit" className={classes.button} onClick={this.googleSignOut}>
-          Sign Out
+        <Button color="inherit" className={classes.button} onClick={this.googleSignOut}>Sign Out</Button>
+        <Button variant="contained" color="default">
+          {/* <MemoryRouter> */}
+            <Link to="/upload" className={classes.link}>Upload</Link>
+          {/* </MemoryRouter> */}
+          <CloudUploadIcon className={classes.rightIcon} />
         </Button>
       </div>
     );
@@ -101,7 +93,9 @@ class Header extends Component {
         <AppBar position="static" color="primary">
           <Toolbar>
             <Typography variant="subtitle1" color="inherit" className={classes.flex}>
-              Firebase Videos
+            {/* <MemoryRouter> */}
+              <Link to="/" className={classes.link}>Firebase Videos</Link>
+            {/* </MemoryRouter> */}
             </Typography>
             {this.state.isLogin ? this.renderLoginedComponent(classes) : this.renderLoginComponent(classes)}
           </Toolbar>
